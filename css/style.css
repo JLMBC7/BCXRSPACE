@@ -2056,7 +2056,7 @@ fieldset[disabled] .s-btn {
   width: 1.875rem;
   height: 3rem;
   z-index: 9;
-  background: #13b1cd;
+  background: #3D61C8;
   border-radius: 3.125rem;
   text-align: center;
   transition-duration: 300ms;
@@ -2082,7 +2082,7 @@ fieldset[disabled] .s-btn {
 }
 
 .s-back-to-top:hover:before {
-  color: #13b1cd;
+  color: #3D61C8;
 }
 
 .s-back-to-top:focus, .s-back-to-top:hover {
@@ -2119,7 +2119,7 @@ fieldset[disabled] .s-btn {
 }
 
 .s-portfolio__filter-v1-item.cbp-filter-item-active {
-  color: #13b1cd !important;
+  color: #3D61C8 !important;
 }
 
 .s-portfolio__filter-v1.cbp-l-filters-text {
@@ -2140,7 +2140,7 @@ fieldset[disabled] .s-btn {
   right: 0;
   width: 100%;
   height: 100%;
-  background: rgba(19, 177, 205, 0.95);
+  background: rgba(61, 97, 200, 0.95);
   content: " ";
   -webkit-transform: translate3d(0, 100%, 0);
   transform: translate3d(0, 100%, 0);
