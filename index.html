@@ -32,12 +32,28 @@
         <link rel="apple-touch-icon" href="img/apple-touch-icon.png">     
         
         <style>
-            @media screen and (max-width: 1024px) { /* Specific to this particular image */
-            #js__parallax-window {
-                left: 50%;
-                margin-left: -512px;   /* 50% */
-            }
-            }
+            .par {
+                @include clearfix;
+                border-top: 10px solid rgba(255, 255, 255, .46);
+                color: $white;
+                padding-bottom: 4em;
+                overflow: hidden; // added for pseudo-element
+                position: relative; // added for pseudo-element
+                // Fixed-position background image
+                &::before {
+                    content: ' ';
+                    position: fixed; // instead of background-attachment
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    background-color: white;
+                    background: url('/img/front/strategy.jpg') no-repeat center center;
+                    background-size: cover;
+                    will-change: transform; // creates a new paint layer
+                    z-index: -1;
+                }
+}
         </style>
     </head>
     <!-- End Head -->
@@ -267,7 +283,7 @@
         <!-- End Features -->
 
         <!-- Parallax -->
-        <div class="js__parallax-window" style="background: url(img/1920x1080/03.jpg) 50% 0 no-repeat fixed;">
+        <div class="js__parallax-window" id="par" style="background: url(img/1920x1080/03.jpg) 50% 0 no-repeat fixed;">
             <div class="container g-text-center--xs g-padding-y-80--xs g-padding-y-125--sm">
                 <div class="g-margin-b-80--xs">
                     <h2 class="g-font-size-40--xs g-font-size-50--sm g-font-size-60--md g-color--white">The Fastest Way To Develop</h2>
