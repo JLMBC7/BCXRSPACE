@@ -1128,12 +1128,12 @@ section {
 }
 
 .pricing .box .btn-buy:hover {
-  background: #009961;
+  background: #2346BC;
   color: #fff;
 }
 
 .pricing .recommended {
-  border-color: #009961;
+  border-color: #2346BC;
 }
 
 .pricing .recommended .btn-buy {
@@ -1142,8 +1142,8 @@ section {
 }
 
 .pricing .recommended .btn-buy:hover {
-  background: #00b371;
-  border-color: #00b371;
+  background: #2346BC;
+  border-color: #3F77BF;
 }
 
 .pricing .recommended-badge {
@@ -1155,7 +1155,7 @@ section {
   font-size: 13px;
   padding: 3px 25px 6px 25px;
   background: #edfbf0;
-  color: #009961;
+  color: #2346BC;
   border-radius: 50px;
 }
 
