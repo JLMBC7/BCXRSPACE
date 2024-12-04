@@ -1,33 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>BCXR Space</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<style>
-body,h1 {font-family: "Raleway", sans-serif, font-weight: bold}
-body, html {height: 100%}
-.bgimg {
-  background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/9bc27292880429.5e569ff84e4d0.gif');
-  min-height: 100%;
-  background-position: center;
-  background-size: cover;
-}
-</style>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BCXR Space</title>
+    
+    <style>
+      a-scene { display: block; width: 50%; }
+      body {
+            font-family: Tahoma, sans-serif;
+          }
+      p {
+        font-size: 14px;
+      }
+    </style>
+    
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <a-scene  xr-mode-ui="enabled: false" info-message="htmlSrc: #messageText" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <a-asset-item id="tree" src="https://cdn.glitch.global/c34ee6e3-d917-4887-91c9-e0744f03bec9/planet_earth.glb?v=1733260095796"></a-asset-item>
+      </a-assets>
 
-<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
-  <div class="w3-display-topleft w3-padding-large w3-xlarge">
-    BCXR Space
-  </div>
-  <div class="w3-display-middle">
-    <h1 class="w3-jumbo w3-animate-top w3-center">COMING SOON</h1>
-    <hr class="w3-border-grey" style="margin:auto;width:40%">
-    <p class="w3-large w3-center">April 2025</p>
-  </div>
-</div>
-</body>
+      <a-entity gltf-model="#tree" position="0 -5 -10" scale="5 5 5" 
+                animation="property:rotation.y;from:0;to:360; dur:50000;dir:normal;loop:true;easing:linear;"></a-entity>
+            
+     <a-entity camera="" position="0.00982 1.6 1.423" rotation="0 0.115 0" aframe-injected="" data-aframe-inspector-original-camera=""></a-entity> 
+      
+      <img id="shadow" src="https://cdn.glitch.com/20600112-c04b-492c-8190-8a5ccc06f37d%2Fshadow.png?v=1606338852399"></img>
+      <a-asset-item id="messageText" src="message.html"></a-asset-item>
+      
+      <a-entity text__text="align: center; value: BCXR SPACE; width: 18" position="-0.013 1.843 -4.188" class="TEXT-2"></a-entity>
+      <a-entity text__text="align: center; value: COMING SOON; width: 18" position="-0.01883 1 -4" class="TEXT"></a-entity>
+      <a-entity text__text="align: center; value: Spring 2025; width: 14" position="-0.00355 0.21613 -4" class="TEXT-3"></a-entity>
+      
+      <a-sky src="https://cdn.glitch.global/c34ee6e3-d917-4887-91c9-e0744f03bec9/eso0932a.jpg?v=1733270380633"> 
+      </a-sky>
+    </a-scene>
+  </body>
 </html> 
+
+        
