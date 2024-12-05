@@ -5,20 +5,19 @@
     <title>BCXR Space</title>
     
     <style>
-      a-scene { display: block; width: 50%; }
       body {
             font-family: Tahoma, sans-serif;
           }
-      p {
-        font-size: 14px;
-      }
+     
     </style>
     
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js"></script> 
+    <link rel="stylesheet" href="styles.css">
+    
   </head>
   <body>
-    <a-scene  xr-mode-ui="enabled: false" info-message="htmlSrc: #messageText" device-orientation-permission-ui="enabled: false">
+    <a-scene xr-mode-ui="enabled: false" info-message="htmlSrc: #messageText" device-orientation-permission-ui="enabled: false">
       <a-assets>
         <a-asset-item id="tree" src="https://cdn.glitch.global/c34ee6e3-d917-4887-91c9-e0744f03bec9/planet_earth.glb?v=1733260095796"></a-asset-item>
       </a-assets>
@@ -26,15 +25,70 @@
       <a-entity gltf-model="#tree" position="0 -5 -10" scale="5 5 5" 
                 animation="property:rotation.y;from:0;to:360; dur:50000;dir:normal;loop:true;easing:linear;"></a-entity>
             
-     <a-entity camera="" position="0.00982 1.6 1.423" rotation="0 0.115 0" aframe-injected="" data-aframe-inspector-original-camera=""></a-entity> 
+    
+  <a-entity camera="" position="0.01 1.6 0.04093" rotation="0 0.115 0" aframe-injected="" data-aframe-inspector-original-camera=""></a-entity>
+      
+      
       
       <img id="shadow" src="https://cdn.glitch.com/20600112-c04b-492c-8190-8a5ccc06f37d%2Fshadow.png?v=1606338852399"></img>
       <a-asset-item id="messageText" src="message.html"></a-asset-item>
       
-      <a-entity text__text="align: center; value: BCXR SPACE; width: 18" position="-0.013 1.843 -4.188" class="TEXT-2"></a-entity>
-      <a-entity text__text="align: center; value: COMING SOON; width: 18" position="-0.01883 1 -4" class="TEXT"></a-entity>
-      <a-entity text__text="align: center; value: Spring 2025; width: 14" position="-0.00355 0.21613 -4" class="TEXT-3"></a-entity>
       
+    
+       <a-assets>
+        <a-mixin id="frame-edge" geometry="primitive: box; depth: 10; height: 0.1; width: 0.1" material="color: #fff"></a-mixin>
+      </a-assets>
+    
+    
+     <!-- A generic logo made of animated elements -->
+      <a-entity id="logo" position="0 1.6 -1" scale=".5 .5 .5">
+        <a-entity id="box"
+          animation__scale="property: scale; to: 1 1 1; delay: 500; dur: 500; easing: easeOutCubic"
+          animation__position="property: position; to: 0 0 0; delay: 500; dur: 500; easing: easeOutCubic"
+          animation__rotation="property: rotation; to: 30 54 36; delay: 500; dur: 1200; easing: easeOutCubic"
+          scale="0 0 0" position="0 -0.5 0" rotation ="0 -300 0">
+          <a-box width="0.25" depth="0.25" height="0.25" color="#EF2D5E"></a-box>
+
+          <a-entity scale="0.04 0.04 0.04">
+            <a-entity mixin="frame-edge" position="5 5 0" rotation="0 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="5 -5 0" rotation="0 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="-5 5 0" rotation="0 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="-5 -5 0" rotation="0 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="0 5 5" rotation="0 90 0"></a-entity>
+            <a-entity mixin="frame-edge" position="0 5 -5" rotation="0 90 0"></a-entity>
+            <a-entity mixin="frame-edge" position="0 -5 5" rotation="0 90 0"></a-entity>
+            <a-entity mixin="frame-edge" position="0 -5 -5" rotation="0 90 0"></a-entity>
+            <a-entity mixin="frame-edge" position="5 0 5" rotation="90 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="5 0 -5" rotation="90 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="-5 0 5" rotation="90 0 0"></a-entity>
+            <a-entity mixin="frame-edge" position="-5 0 -5" rotation="90 0 0"></a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="dots1" rotation="0 0 45" animation="property: scale; to: 1 0.6 1; delay: 800; dur: 750; easing: easeOutCubic" scale="1 0 1">
+          <a-cylinder position="0 2 0" radius="0.04" height="2" color="#EF2D5E" open-ended="true" side="double"
+                      animation="property: scale; to: 1 0 1; delay: 800; dur: 750; easing: easeOutCubic"></a-cylinder>
+          <a-cylinder position="0 -2 0" radius="0.04" height="2" color="#EF2D5E" open-ended="true" side="double"
+                      animation="property: scale; to: 1 0 1; delay: 800; dur: 750; easing: easeOutCubic"></a-cylinder>
+        </a-entity>
+
+        <a-entity id="dots1" rotation="0 0 -45" animation="property: scale; from: 1 0 1; to: 1 0.6 1; delay: 800; dur: 750; easing: easeOutCubic" scale="1 0 1">
+          <a-cylinder position="0 2 0" radius="0.04" height="2" color="#EF2D5E" open-ended="true" side="double"
+                      animation="property: scale; to: 1 0 1; delay: 800; dur: 750; easing: easeOutCubic" scale="1 1.25 1"></a-cylinder>
+          <a-cylinder position="0 -2 0" radius="0.04" height="2" color="#EF2D5E" open-ended="true" side="double"
+                      animation="property: scale; to: 1 0 1; delay: 800; dur: 750; easing: easeOutCubic" scale="1 1.25 1"></a-cylinder>
+        </a-entity>
+
+        <a-image id="webvr" src="https://cdn.glitch.global/c34ee6e3-d917-4887-91c9-e0744f03bec9/xrspace.png?v=1733438419401" width = "6" height = "4" opacity="1" scale="1 0 1" position="0 -3 0"
+                 animation__scale="property: scale; to: 0.75 0.75 0.75; delay: 1500; dur: 200; easing: easeOutCubic"
+                 animation__position="property: position; to: 0 -0.8 0; delay: 1000; dur: 1000; easing: easeOutCubic"></a-image>
+      </a-entity>
+    
+    
+    
+    
+    
+    
       <a-sky src="https://cdn.glitch.global/c34ee6e3-d917-4887-91c9-e0744f03bec9/eso0932a.jpg?v=1733270380633"> 
       </a-sky>
     </a-scene>
