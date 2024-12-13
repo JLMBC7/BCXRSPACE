@@ -35,7 +35,7 @@ AFRAME.registerComponent('info-message', {
 
   addStyles: function () {
     var css =
-      '.a-info-message{border-radius: 10px; position: absolute; width: fit-content;' +
+      '.a-info-message{border-radius: 10px; position: absolute; width: 420;' +
       'height: fit-content; background-color: white; border: 3px solid rgba(0,0,0,.75);' +
       'bottom: 22px; left: 22px; color: rgb(51, 51, 51); padding: 20px 15px 0 15px;' +
       'font-size: 12pt; line-height: 18pt;}' +
