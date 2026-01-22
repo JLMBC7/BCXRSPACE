@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BCXR Space</title>
+    <title>BCXR Space - Bakersfield College Makerspace</title>
     <style>
         body, html { 
             margin: 0; 
@@ -21,6 +21,32 @@
             display: block; 
             outline: none; 
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Accessibility: Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: #ff0000;
+            color: white;
+            padding: 8px;
+            z-index: 10000;
+            text-decoration: none;
+            transition: top 0.3s;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* Visually Hidden but Screen Reader Accessible */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
         
         /* Top Left Brand Overlay */
@@ -63,14 +89,12 @@
             font-size: clamp(24px, 8vw, 64px);
             font-weight: 800;
             text-transform: uppercase;
-            /* Relaxed letter spacing slightly from previous version */
             letter-spacing: clamp(6px, 1.5vw, 12px);
             margin: 0;
             background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             opacity: 0.9;
-            /* Applying the pulse animation */
             animation: pulseGlow 3s ease-in-out infinite;
         }
 
@@ -126,10 +150,11 @@
             pointer-events: auto;
         }
 
-        #info-btn:hover {
+        #info-btn:hover, #info-btn:focus {
             background: rgba(255, 0, 0, 0.15); 
             border-color: #ff0000; 
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            outline: none;
         }
 
         /* Modal Styling */
@@ -190,8 +215,10 @@
             transition: color 0.3s ease;
         }
         
-        .modal-content a:hover {
+        .modal-content a:hover, .modal-content a:focus {
             color: #ff4d4d;
+            outline: 1px solid #ff0000;
+            outline-offset: 4px;
         }
 
         #close-modal {
@@ -206,7 +233,10 @@
             line-height: 1;
         }
 
-        #close-modal:hover { color: #ff0000; }
+        #close-modal:hover, #close-modal:focus { 
+            color: #ff0000; 
+            outline: none;
+        }
         
         @media (max-height: 450px) {
             .modal-content { padding: 20px; overflow-y: auto; max-height: 90vh; }
@@ -215,30 +245,36 @@
 </head>
 <body>
 
-    <div id="overlay">
+    <a href="#info-btn" class="skip-link">Skip to information</a>
+
+    <header id="overlay" aria-hidden="true">
         <div class="label">Atmosphere</div>
         <div class="title">BCXR // Space</div>
         <div class="label" style="margin-top: 5px;">Rendering Active</div>
-    </div>
+    </header>
 
-    <div id="center-announcement">
+    <main id="center-announcement">
         <h1 class="coming-soon">BCXR Space</h1>
-        <div class="date-label">COMING SOON 2026</div>
-    </div>
+        <div class="date-label" aria-label="Coming Soon 2026">COMING SOON 2026</div>
+        <div class="sr-only">Interactive 3D nebula background with deep space starfield effects.</div>
+    </main>
 
-    <button id="info-btn">Info</button>
+    <button id="info-btn" aria-haspopup="dialog" aria-controls="info-modal">Info</button>
 
-    <div id="info-modal">
+    <div id="info-modal" 
+         role="dialog" 
+         aria-modal="true" 
+         aria-labelledby="modal-title">
         <div class="modal-content">
-            <button id="close-modal">&times;</button>
-            <h2>Bakersfield College eXtended Reality makerSpace</h2>
+            <button id="close-modal" aria-label="Close dialog">&times;</button>
+            <h2 id="modal-title">Bakersfield College eXtended Reality makerSpace</h2>
             <p><strong>The BCXR Space</strong> is a makerspace on the Panorama campus with access to a collaborative environment where students, faculty, and staff bring their ideas to life.</p>
             <p>Whether you're a beginner or an experienced maker, our makerspace offers the tools, resources, and community you need to innovate and succeed. </p>
-            <p>Visit <a href="https://www.bakersfieldcollege.edu/community/extended-reality-makerspace.html" target="_blank">Bakersfield College</a> for more details.</p>
+            <p>Visit <a href="https://www.bakersfieldcollege.edu/community/extended-reality-makerspace.html" target="_blank" rel="noopener">Bakersfield College Makerspace website</a> for more details.</p>
         </div>
     </div>
 
-    <canvas id="renderCanvas"></canvas>
+    <canvas id="renderCanvas" role="img" aria-label="3D Space Environment with nebula and stars"></canvas>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
 
@@ -254,41 +290,10 @@
             const scene = new BABYLON.Scene(engine);
             scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
 
-            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.2, 10, BABYLON.Vector3.Zero(), scene);
+            // Camera looking into the void
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
             camera.attachControl(canvas, true);
-            camera.lowerRadiusLimit = 6;
-            camera.upperRadiusLimit = 25;
             camera.wheelPrecision = 50;
-
-            const sunLight = new BABYLON.DirectionalLight("sunLight", new BABYLON.Vector3(-1, -0.5, 1), scene);
-            sunLight.intensity = 3;
-            sunLight.diffuse = new BABYLON.Color3(1, 1, 0.95);
-
-            const ambientLight = new BABYLON.HemisphericLight("ambient", new BABYLON.Vector3(0, 1, 0), scene);
-            ambientLight.intensity = 0.2;
-
-            const earth = BABYLON.MeshBuilder.CreateSphere("earth", { segments: 128, diameter: 5 }, scene);
-            const earthMat = new BABYLON.PBRMaterial("earthMat", scene);
-            
-            earthMat.albedoColor = new BABYLON.Color3(0.1, 0.3, 0.6); 
-            earthMat.reflectivityColor = new BABYLON.Color3(0.1, 0.1, 0.1);
-            earthMat.roughness = 0.6;
-            
-            const noiseTexture = new BABYLON.NoiseProceduralTexture("noise", 512, scene);
-            noiseTexture.octaves = 8;
-            noiseTexture.persistence = 0.8;
-            earthMat.albedoTexture = noiseTexture;
-            
-            earthMat.emissiveColor = new BABYLON.Color3(0.2, 0.5, 1.0);
-            earthMat.emissiveIntensity = 0.05; 
-            
-            earthMat.emissiveFresnelParameters = new BABYLON.FresnelParameters();
-            earthMat.emissiveFresnelParameters.bias = 0.1;
-            earthMat.emissiveFresnelParameters.power = 4;
-            earthMat.emissiveFresnelParameters.leftColor = new BABYLON.Color3(0.1, 0.4, 1);
-            earthMat.emissiveFresnelParameters.rightColor = BABYLON.Color3.Black();
-
-            earth.material = earthMat;
 
             BABYLON.Effect.ShadersStore["smokePixelShader"] = `
                 precision highp float;
@@ -352,10 +357,6 @@
                 effect.setFloat2("resolution", engine.getRenderWidth(), engine.getRenderHeight());
             };
 
-            scene.registerBeforeRender(() => {
-                earth.rotation.y += 0.001;
-            });
-
             return scene;
         };
 
@@ -372,14 +373,18 @@
         const infoBtn = document.getElementById("info-btn");
         const infoModal = document.getElementById("info-modal");
         const closeModal = document.getElementById("close-modal");
+        let lastFocusedElement;
 
         infoBtn.addEventListener("click", (e) => {
             e.stopPropagation();
+            lastFocusedElement = document.activeElement;
             infoModal.classList.add("active");
+            setTimeout(() => closeModal.focus(), 100);
         });
 
         const hideModal = () => {
             infoModal.classList.remove("active");
+            if (lastFocusedElement) lastFocusedElement.focus();
         };
 
         closeModal.addEventListener("click", hideModal);
@@ -387,6 +392,12 @@
         infoModal.addEventListener("click", (e) => {
             if (e.target === infoModal) hideModal();
         });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && infoModal.classList.contains('active')) {
+                hideModal();
+            }
+        });
     </script>
 </body>
-</html>
+</html> 
