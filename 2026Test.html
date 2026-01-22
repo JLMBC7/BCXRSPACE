@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BCXR Space</title>
+    <style>
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #000;
+            touch-action: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas { 
+            width: 100%; 
+            height: 100%; 
+            display: block; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Top Left Brand Overlay */
+        #overlay {
+            position: absolute;
+            top: clamp(10px, 4vw, 20px);
+            left: clamp(10px, 4vw, 20px);
+            color: white;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+        .label { 
+            font-size: clamp(8px, 2vw, 10px); 
+            color: #ff0000; 
+            font-weight: bold; 
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        .title { 
+            font-size: clamp(16px, 5vw, 24px); 
+            font-weight: 200; 
+            line-height: 1.2;
+        }
+
+        /* Central Coming Soon Text */
+        #center-announcement {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            pointer-events: none;
+            z-index: 10; 
+            width: 100%;
+        }
+
+        .coming-soon {
+            font-size: clamp(24px, 8vw, 64px);
+            font-weight: 800;
+            text-transform: uppercase;
+            /* Relaxed letter spacing slightly from previous version */
+            letter-spacing: clamp(6px, 1.5vw, 12px);
+            margin: 0;
+            background: linear-gradient(to bottom, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.9;
+            /* Applying the pulse animation */
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.4));
+                opacity: 0.8;
+            }
+            50% {
+                filter: drop-shadow(0 0 35px rgba(255, 0, 0, 0.9));
+                opacity: 1;
+            }
+        }
+
+        .date-label {
+            font-size: clamp(12px, 3vw, 18px);
+            letter-spacing: 8px;
+            color: #ff0000; 
+            margin-top: 10px;
+            font-weight: 400;
+            opacity: 0.9;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+            animation: textFlicker 4s linear infinite;
+        }
+
+        @keyframes textFlicker {
+            0%, 100% { opacity: 0.9; }
+            95% { opacity: 0.9; }
+            96% { opacity: 0.4; }
+            97% { opacity: 0.9; }
+            98% { opacity: 0.7; }
+            99% { opacity: 0.9; }
+        }
+
+        /* Info Button Styling */
+        #info-btn {
+            position: absolute;
+            bottom: clamp(15px, 5vw, 30px);
+            left: clamp(15px, 5vw, 30px);
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            z-index: 1000; 
+            transition: all 0.3s ease;
+            border-radius: 2px;
+            pointer-events: auto;
+        }
+
+        #info-btn:hover {
+            background: rgba(255, 0, 0, 0.15); 
+            border-color: #ff0000; 
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Modal Styling */
+        #info-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #info-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 25, 0.9);
+            border: 1px solid rgba(255, 0, 0, 0.2); 
+            padding: 40px;
+            max-width: 500px;
+            width: 85%;
+            color: white;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255, 0, 0, 0.1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-weight: 200;
+            letter-spacing: 1px;
+            color: #ff0000; 
+            font-size: clamp(18px, 4vw, 24px);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .modal-content p {
+            line-height: 1.6;
+            font-weight: 300;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .modal-content a {
+            color: #ff0000; 
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-content a:hover {
+            color: #ff4d4d;
+        }
+
+        #close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        #close-modal:hover { color: #ff0000; }
+        
+        @media (max-height: 450px) {
+            .modal-content { padding: 20px; overflow-y: auto; max-height: 90vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <div class="label">Atmosphere</div>
+        <div class="title">BCXR // Space</div>
+        <div class="label" style="margin-top: 5px;">Rendering Active</div>
+    </div>
+
+    <div id="center-announcement">
+        <h1 class="coming-soon">BCXR Space</h1>
+        <div class="date-label">COMING SOON 2026</div>
+    </div>
+
+    <button id="info-btn">Info</button>
+
+    <div id="info-modal">
+        <div class="modal-content">
+            <button id="close-modal">&times;</button>
+            <h2>Bakersfield College eXtended Reality makerSpace</h2>
+            <p><strong>The BCXR Space</strong> is a makerspace on the Panorama campus with access to a collaborative environment where students, faculty, and staff bring their ideas to life.</p>
+            <p>Whether you're a beginner or an experienced maker, our makerspace offers the tools, resources, and community you need to innovate and succeed. </p>
+            <p>Visit <a href="https://www.bakersfieldcollege.edu/community/extended-reality-makerspace.html" target="_blank">Bakersfield College</a> for more details.</p>
+        </div>
+    </div>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+    <script>
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true, { 
+            preserveDrawingBuffer: true, 
+            stencil: true,
+            adaptToDeviceRatio: true 
+        });
+
+        const createScene = function () {
+            const scene = new BABYLON.Scene(engine);
+            scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+
+            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.2, 10, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.lowerRadiusLimit = 6;
+            camera.upperRadiusLimit = 25;
+            camera.wheelPrecision = 50;
+
+            const sunLight = new BABYLON.DirectionalLight("sunLight", new BABYLON.Vector3(-1, -0.5, 1), scene);
+            sunLight.intensity = 3;
+            sunLight.diffuse = new BABYLON.Color3(1, 1, 0.95);
+
+            const ambientLight = new BABYLON.HemisphericLight("ambient", new BABYLON.Vector3(0, 1, 0), scene);
+            ambientLight.intensity = 0.2;
+
+            const earth = BABYLON.MeshBuilder.CreateSphere("earth", { segments: 128, diameter: 5 }, scene);
+            const earthMat = new BABYLON.PBRMaterial("earthMat", scene);
+            
+            earthMat.albedoColor = new BABYLON.Color3(0.1, 0.3, 0.6); 
+            earthMat.reflectivityColor = new BABYLON.Color3(0.1, 0.1, 0.1);
+            earthMat.roughness = 0.6;
+            
+            const noiseTexture = new BABYLON.NoiseProceduralTexture("noise", 512, scene);
+            noiseTexture.octaves = 8;
+            noiseTexture.persistence = 0.8;
+            earthMat.albedoTexture = noiseTexture;
+            
+            earthMat.emissiveColor = new BABYLON.Color3(0.2, 0.5, 1.0);
+            earthMat.emissiveIntensity = 0.05; 
+            
+            earthMat.emissiveFresnelParameters = new BABYLON.FresnelParameters();
+            earthMat.emissiveFresnelParameters.bias = 0.1;
+            earthMat.emissiveFresnelParameters.power = 4;
+            earthMat.emissiveFresnelParameters.leftColor = new BABYLON.Color3(0.1, 0.4, 1);
+            earthMat.emissiveFresnelParameters.rightColor = BABYLON.Color3.Black();
+
+            earth.material = earthMat;
+
+            BABYLON.Effect.ShadersStore["smokePixelShader"] = `
+                precision highp float;
+                varying vec2 vUV;
+                uniform float time;
+                uniform vec2 resolution;
+
+                float hash(vec2 p) {
+                    p = fract(p * vec2(123.34, 456.21));
+                    p += dot(p, p + 45.32);
+                    return fract(p.x * p.y);
+                }
+                
+                float noise(vec2 p) {
+                    vec2 i = floor(p);
+                    vec2 f = fract(p);
+                    float a = hash(i);
+                    float b = hash(i + vec2(1.0, 0.0));
+                    float c = hash(i + vec2(0.0, 1.0));
+                    float d = hash(i + vec2(1.0, 1.0));
+                    vec2 u = f * f * (3.0 - 2.0 * f);
+                    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                }
+
+                float fbm(vec2 p) {
+                    float v = 0.0; 
+                    float a = 0.5;
+                    mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
+                    for (int i = 0; i < 7; ++i) {
+                        v += a * noise(p);
+                        p = rot * p * 2.0 + vec2(10.0);
+                        a *= 0.5;
+                    }
+                    return v;
+                }
+
+                void main() {
+                    vec2 uv = vUV;
+                    vec2 p = (uv - 0.5) * 2.0;
+                    p.x *= resolution.x / resolution.y;
+                    float t = time * 0.15;
+                    vec2 q = vec2(fbm(p + vec2(t * 0.2, t * 0.1)), fbm(p + vec2(5.2, 1.3) + t * 0.15));
+                    vec2 r = vec2(fbm(p + 4.0 * q + vec2(1.7, 9.2) + 0.15 * t), fbm(p + 4.0 * q + vec2(8.3, 2.8) + 0.126 * t));
+                    float f = fbm(p + r);
+                    vec3 color = mix(vec3(0.01, 0.0, 0.05), vec3(0.05, 0.01, 0.15), clamp((f*f)*4.0, 0.0, 1.0));
+                    color = mix(color, vec3(0.93, 0.17, 0.36), clamp(length(q), 0.0, 1.0) * 0.6);
+                    color = mix(color, vec3(0.2, 0.5, 0.8), clamp(length(r.x), 0.0, 1.0) * 0.5);
+                    f = pow(f, 1.2);
+                    vec3 finalColor = color * f * 1.5;
+                    float starHash = hash(p * 150.0);
+                    float flicker = 0.8 + 0.2 * sin(time * 2.0 + starHash * 100.0);
+                    float stars = pow(starHash, 500.0) * (1.0 - f * 0.8);
+                    finalColor += stars * flicker;
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            const smokeEffect = new BABYLON.PostProcess("smokeEffect", "smoke", ["time", "resolution"], null, 1.0, camera);
+            smokeEffect.onApply = (effect) => {
+                effect.setFloat("time", performance.now() * 0.001);
+                effect.setFloat2("resolution", engine.getRenderWidth(), engine.getRenderHeight());
+            };
+
+            scene.registerBeforeRender(() => {
+                earth.rotation.y += 0.001;
+            });
+
+            return scene;
+        };
+
+        const scene = createScene();
+        
+        engine.runRenderLoop(() => {
+            scene.render();
+        });
+
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+
+        const infoBtn = document.getElementById("info-btn");
+        const infoModal = document.getElementById("info-modal");
+        const closeModal = document.getElementById("close-modal");
+
+        infoBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            infoModal.classList.add("active");
+        });
+
+        const hideModal = () => {
+            infoModal.classList.remove("active");
+        };
+
+        closeModal.addEventListener("click", hideModal);
+        
+        infoModal.addEventListener("click", (e) => {
+            if (e.target === infoModal) hideModal();
+        });
+    </script>
+</body>
+</html>  -->
